@@ -16,7 +16,7 @@ date_default_timezone_set('America/Chicago');
    Database Engine Toggle (SQLite for XAMPP / MySQL for InfinityFree)
    ========================================================================== */
 // Choose 'sqlite' (local development) or 'mysql' (production deployment)
-define('DB_ENGINE', 'sqlite');
+define('DB_ENGINE', 'mysql');
 
 // SQLite Setup Paths (ignored if DB_ENGINE is 'mysql')
 define('DB_DIR', __DIR__ . '/../database');
@@ -24,10 +24,10 @@ define('DB_FILE', DB_DIR . '/primus.db');
 
 // MySQL Credentials (ignored if DB_ENGINE is 'sqlite')
 // Enter your InfinityFree or cPanel MySQL details here
-define('DB_HOST', 'sqlxxx.infinityfree.com');
-define('DB_NAME', 'if0_xxxxxxxx_primus');
-define('DB_USER', 'if0_xxxxxxxx');
-define('DB_PASS', 'your_infinityfree_password');
+define('DB_HOST', 'sql207.infinityfree.com');
+define('DB_NAME', 'if0_41820956_primus');
+define('DB_USER', 'if0_41820956');
+define('DB_PASS', 'wuV1o5bAzBtm99P');
 
 $pdo = null;
 $db_error = null;
