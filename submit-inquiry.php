@@ -37,6 +37,11 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 }
 
 try {
+    // Assert active database connection exists
+    if ($pdo === null) {
+        throw new PDOException("Database service is currently unconfigured or offline.");
+    }
+
     // Prepare secure insertion query
     $stmt = $pdo->prepare("INSERT INTO inquiries (name, company, email, phone, service, message) 
                            VALUES (:name, :company, :email, :phone, :service, :message)");

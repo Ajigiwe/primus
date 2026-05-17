@@ -12,36 +12,73 @@ if (session_status() === PHP_SESSION_NONE) {
 // Global timezone
 date_default_timezone_set('America/Chicago');
 
-// Database configuration (SQLite setup)
+/* ==========================================================================
+   Database Engine Toggle (SQLite for XAMPP / MySQL for InfinityFree)
+   ========================================================================== */
+// Choose 'sqlite' (local development) or 'mysql' (production deployment)
+define('DB_ENGINE', 'sqlite');
+
+// SQLite Setup Paths (ignored if DB_ENGINE is 'mysql')
 define('DB_DIR', __DIR__ . '/../database');
 define('DB_FILE', DB_DIR . '/primus.db');
 
+// MySQL Credentials (ignored if DB_ENGINE is 'sqlite')
+// Enter your InfinityFree or cPanel MySQL details here
+define('DB_HOST', 'sqlxxx.infinityfree.com');
+define('DB_NAME', 'if0_xxxxxxxx_primus');
+define('DB_USER', 'if0_xxxxxxxx');
+define('DB_PASS', 'your_infinityfree_password');
+
+$pdo = null;
+$db_error = null;
+
 try {
-    // Create database directory if not exists
-    if (!is_dir(DB_DIR)) {
-        mkdir(DB_DIR, 0755, true);
+    if (DB_ENGINE === 'sqlite') {
+        // Create database directory if not exists
+        if (!is_dir(DB_DIR)) {
+            mkdir(DB_DIR, 0755, true);
+        }
+
+        // Connect to SQLite Database
+        $pdo = new PDO("sqlite:" . DB_FILE);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
+        // Initialize Schema for SQLite
+        $schema = "CREATE TABLE IF NOT EXISTS inquiries (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            company TEXT,
+            email TEXT NOT NULL,
+            phone TEXT,
+            service TEXT NOT NULL,
+            message TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );";
+        $pdo->exec($schema);
+    } else {
+        // Connect to MySQL Database
+        $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4";
+        $pdo = new PDO($dsn, DB_USER, DB_PASS);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
+        // Initialize Schema for MySQL
+        $schema = "CREATE TABLE IF NOT EXISTS inquiries (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            company VARCHAR(255),
+            email VARCHAR(255) NOT NULL,
+            phone VARCHAR(50),
+            service VARCHAR(255) NOT NULL,
+            message TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
+        $pdo->exec($schema);
     }
-
-    // Connect to SQLite Database
-    $pdo = new PDO("sqlite:" . DB_FILE);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-
-    // Initialize Schema: Create inquiries table
-    $schema = "CREATE TABLE IF NOT EXISTS inquiries (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        company TEXT,
-        email TEXT NOT NULL,
-        phone TEXT,
-        service TEXT NOT NULL,
-        message TEXT,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    );";
-    $pdo->exec($schema);
-
 } catch (PDOException $e) {
-    die("Database initialization failed: " . $e->getMessage());
+    // Graceful degradation: Capture database error without crashing the static pages
+    $db_error = $e->getMessage();
 }
 
 /**

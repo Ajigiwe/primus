@@ -7,8 +7,11 @@
 $pageTitle = 'Admin Dashboard | Primus Catering & Event Management';
 require_once __DIR__ . '/includes/header.php';
 
-// Fetch all inquiry submissions from SQLite database
+// Fetch all inquiry submissions from the database (SQLite/MySQL)
 try {
+    if ($pdo === null) {
+        throw new PDOException("Database service is currently unconfigured or offline.");
+    }
     $stmt = $pdo->query("SELECT * FROM inquiries ORDER BY created_at DESC");
     $inquiries = $stmt->fetchAll();
 } catch (PDOException $e) {
