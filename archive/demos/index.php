@@ -368,7 +368,7 @@
                 <div class="card-body">
                     <span class="card-badge">Direction 01</span>
                     <h3>Neo-Glassmorphism</h3>
-                    <p>Sleek, futuristic, high-tech cloud dashboard styling. Utilizes frosted-glass panels, neon backlighting shadows, dynamic cursor coordinate physics, and fluid animations.</p>
+                    <p>Sleek, modern, and elegant glassmorphic corporate styling. Utilizes frosted-glass panels, subtle backlighting glow, dynamic interactive effects, and fluid animations.</p>
                     
                     <div class="tech-specs">
                         <div class="spec-item">
@@ -381,7 +381,7 @@
                         </div>
                         <div class="spec-item">
                             <span class="spec-label">Transition Style</span>
-                            <span class="spec-value">Neon Orbital Spinner</span>
+                            <span class="spec-value">Orbital Glow Spinner</span>
                         </div>
                     </div>
 

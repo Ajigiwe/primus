@@ -1,303 +1,280 @@
 <?php
 /**
- * Primus Catering & Event Management
- * Home Page - Harbor Street Redesign
+ * Primus Catering & Camp Management
+ * Home Page - Pinterest Design Overhaul
  */
 
-$pageTitle = 'Home | Primus Catering & Event Management';
+// Initialize configuration and database connection
+require_once __DIR__ . '/includes/config.php';
+
+$successMsg = '';
+$errorMsg = '';
+
+// Handle Direct Inquiry Post Submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $name = sanitizeInput($_POST['name'] ?? '');
+    $company = sanitizeInput($_POST['company'] ?? '');
+    $email = sanitizeInput($_POST['email'] ?? '');
+    $phone = sanitizeInput($_POST['phone'] ?? '');
+    $service = sanitizeInput($_POST['service'] ?? '');
+    $message = sanitizeInput($_POST['message'] ?? '');
+
+    if (empty($name) || empty($email) || empty($service)) {
+        $errorMsg = 'Please fill out all required fields (*).';
+    } else {
+        if ($pdo === null) {
+            $errorMsg = 'Database connection is currently offline: ' . ($db_error ?? 'Unknown connection error.');
+        } else {
+            try {
+                $stmt = $pdo->prepare("INSERT INTO inquiries (name, company, email, phone, service, message) VALUES (?, ?, ?, ?, ?, ?)");
+                $stmt->execute([$name, $company, $email, $phone, $service, $message]);
+                $successMsg = 'Inquiry submitted successfully! A representative will contact you shortly.';
+            } catch (PDOException $e) {
+                $errorMsg = 'Database error: ' . $e->getMessage();
+            }
+        }
+    }
+
+    // Modern AJAX Response Support
+    if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+        header('Content-Type: application/json');
+        if (!empty($errorMsg)) {
+            echo json_encode(['status' => 'error', 'message' => $errorMsg]);
+        } else {
+            echo json_encode(['status' => 'success', 'message' => $successMsg]);
+        }
+        exit;
+    }
+}
+
+$pageTitle = 'Home | Primus Catering & Camp Management';
 require_once __DIR__ . '/includes/header.php';
 ?>
 
-<!-- Centered atmospheric luxury Hero section -->
-<section class="hero-editorial">
-    <!-- Atmospheric Luxury Hero Image Slider Backgrounds -->
-    <div class="hero-slider">
-        <div class="hero-slide active" style="background-image: linear-gradient(rgba(9, 13, 22, 0.45), rgba(9, 13, 22, 0.96)), url('c1.jpg');"></div>
-        <div class="hero-slide" style="background-image: linear-gradient(rgba(9, 13, 22, 0.45), rgba(9, 13, 22, 0.96)), url('real1.jpg');"></div>
-        <div class="hero-slide" style="background-image: linear-gradient(rgba(9, 13, 22, 0.45), rgba(9, 13, 22, 0.96)), url('f1.jpg');"></div>
-        <div class="hero-slide" style="background-image: linear-gradient(rgba(9, 13, 22, 0.45), rgba(9, 13, 22, 0.96)), url('g1.jpg');"></div>
-    </div>
-    
-    <div class="hero-centered-content reveal-fade-up">
-        <span class="uppercase-label">Primus Group Holdings</span>
-        <h1 class="hero-title">Multi-Sector Conglomerate Excellence</h1>
-        <p class="hero-subtitle">Delivering elite culinary catering, premium real estate venues, dynamic financial solutions, and global supply logistics.</p>
-        <div class="hero-actions">
-            <a href="contact.php" class="btn btn-primary">
-                <span class="material-symbols-outlined" style="font-size: 18px;">event_note</span>
-                Request Quote
-            </a>
-            <a href="services.php" class="btn btn-white-outline">
-                <span class="material-symbols-outlined" style="font-size: 18px;">explore</span>
-                Our Sectors
-            </a>
-        </div>
-    </div>
-    <!-- Animated scroll mouse down indicator -->
-    <div class="scroll-mouse"></div>
-</section>
-
-
-
-<!-- Featured Capabilities Section -->
-<section class="section-padding container">
-    <div class="editorial-title-block text-center reveal-fade-up">
-        <span>Featured Sectors</span>
-        <h2>Discover Our Core Capabilities</h2>
-        <p class="text-muted" style="max-width: 750px; margin: 16px auto 0; font-size: 1.05rem;">We integrate high-end catering and luxury glamping event management with premium land assets, flexible corporate credit networks, and direct logisitics supply chains.</p>
-    </div>
-
-    <div class="editorial-grid-4">
-        <!-- Sector 1: Catering & Camps -->
-        <a href="services.php" class="editorial-card-link">
-            <div class="editorial-card reveal-fade-up animation-delay-1">
-                <div class="card-img-wrapper">
-                    <img class="card-img" src="c2.jpg" alt="Executive corporate dining setup">
-                    <div class="rating-badge">
-                        <span class="star">&#9733;</span> 5.0
-                    </div>
-                </div>
-                <div class="card-details">
-                    <div class="card-title-row">
-                        <h3 class="card-title" style="font-size: 1.15rem;">Catering &amp; Camps</h3>
-                        <span class="card-price" style="font-size: 1.05rem;">Bespoke</span>
-                    </div>
-                    <p class="text-muted" style="font-size: 0.85rem; line-height: 1.6; margin-top: 4px;">Michelin-class executive dining, board banquets, and managed glamping retreats.</p>
+<!-- Centered Luxury Hero Section (Pinterest Inspo Overhaul) -->
+<section class="hero-asymmetric" id="home">
+    <div class="container" style="text-align: center;">
+        <div class="hero-block-centered reveal-fade-up">
+            <!-- Center Typography Grid -->
+            <div class="hero-text-centered">
+                <span class="hero-subtitle-caps centered-caps">EXCELLENCE // REIMAGINED</span>
+                <h1 class="hero-heading-serif centered-title">Catering &amp; Camp Management</h1>
+                <p class="hero-desc-para centered-desc">
+                    Michelin-class culinary catering and luxury base-camp operations, delivered with absolute precision.
+                </p>
+                <div class="hero-actions-row centered-actions">
+                    <a href="#contact" class="btn-pill">Inquire Now</a>
+                    <a href="#services" class="btn-pill btn-pill-outline">Our Focus</a>
                 </div>
             </div>
-        </a>
 
-        <!-- Sector 2: Real Estate Holdings -->
-        <a href="real-estate.php" class="editorial-card-link">
-            <div class="editorial-card reveal-fade-up animation-delay-2">
-                <div class="card-img-wrapper">
-                    <img class="card-img" src="real2.jpg" alt="Luxury Glamping and Outdoor Retreat Camp Setup">
-                    <div class="rating-badge">
-                        <span class="star">&#9733;</span> 4.9
-                    </div>
-                </div>
-                <div class="card-details">
-                    <div class="card-title-row">
-                        <h3 class="card-title" style="font-size: 1.15rem;">Real Estate</h3>
-                        <span class="card-price" style="font-size: 1.05rem;">Holdings</span>
-                    </div>
-                    <p class="text-muted" style="font-size: 0.85rem; line-height: 1.6; margin-top: 4px;">Securing premium outdoor event grounds, estate grounds, and scenic glamping site leases.</p>
+            <!-- Massive Rounded Image Showcase (Multiple Image Crossfader) -->
+            <div class="hero-img-showcase">
+                <div class="hero-slide-wrapper">
+                    <div class="hero-slide-img active" style="background-image: url('c1.jpg');" aria-label="Luxury Base Camp Glamping Retreats"></div>
+                    <div class="hero-slide-img" style="background-image: url('c2.jpg');" aria-label="Michelin Class Dining Banquets"></div>
+                    <div class="hero-slide-img" style="background-image: url('c3.jpg');" aria-label="Gourmet Culinary Operations"></div>
+                    <div class="hero-slide-img" style="background-image: url('c4.jpg');" aria-label="Michelin-Class Plated Entrées"></div>
+                    <div class="hero-slide-img" style="background-image: url('c5.jpg');" aria-label="Gourmet Dessert & Presentation Operations"></div>
                 </div>
             </div>
-        </a>
-
-        <!-- Sector 3: Financial Services -->
-        <a href="financial-services.php" class="editorial-card-link">
-            <div class="editorial-card reveal-fade-up animation-delay-3">
-                <div class="card-img-wrapper">
-                    <img class="card-img" src="f2.jpg" alt="Corporate banking and asset advisory session">
-                    <div class="rating-badge">
-                        <span class="star">&#9733;</span> 5.0
-                    </div>
-                </div>
-                <div class="card-details">
-                    <div class="card-title-row">
-                        <h3 class="card-title" style="font-size: 1.15rem;">Financial Services</h3>
-                        <span class="card-price" style="font-size: 1.05rem;">Advisory</span>
-                    </div>
-                    <p class="text-muted" style="font-size: 0.85rem; line-height: 1.6; margin-top: 4px;">Bespoke billing frameworks, corporate backing, and revolving lines of event credit.</p>
-                </div>
-            </div>
-        </a>
-
-        <!-- Sector 4: General Supplies -->
-        <a href="general-supplies.php" class="editorial-card-link">
-            <div class="editorial-card reveal-fade-up animation-delay-4">
-                <div class="card-img-wrapper">
-                    <img class="card-img" src="g2.jpg" alt="Active professional office and inventory operations">
-                    <div class="rating-badge">
-                        <span class="star">&#9733;</span> 4.8
-                    </div>
-                </div>
-                <div class="card-details">
-                    <div class="card-title-row">
-                        <h3 class="card-title" style="font-size: 1.15rem;">General Supplies</h3>
-                        <span class="card-price" style="font-size: 1.05rem;">Logistics</span>
-                    </div>
-                    <p class="text-muted" style="font-size: 0.85rem; line-height: 1.6; margin-top: 4px;">Proprietary logistical fleet, provisions warehousing, and heavy canvas camp imports.</p>
-                </div>
-            </div>
-        </a>
-    </div>
-</section>
-
-<!-- Chef / Story Section (Asymmetric Bento with Outline overlays) -->
-<section class="section-padding" style="background-color: var(--color-surface); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);">
-    <div class="container bento-showcase">
-        <!-- Left Side: Image with floating badge -->
-        <div class="bento-image-frame reveal-scale-in">
-            <div class="bento-img-container">
-                <img class="bento-img" src="c3.jpg" alt="Chef preparing luxury meals in active kitchen">
-            </div>
-            <div class="bento-floating-badge">
-                <div class="badge-heart-icon">
-                    <span class="material-symbols-outlined">favorite</span>
-                </div>
-                <div>
-                    <span class="badge-text-val">5,000+</span>
-                    <span class="badge-text-lbl">Clients Served</span>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Right Side: Content -->
-        <div class="bento-text reveal-fade-up">
-            <span class="uppercase-label" style="color: var(--color-blue);">Corporate Story</span>
-            <h2 style="font-size: 2.3rem; margin-bottom: 20px;">Synergy in Action, Quality in Execution</h2>
-            <p class="text-muted" style="font-size: 1.05rem; line-height: 1.8;">The Primus Group Holdings operates at the intersection of premium hospitality, tactical real estate holdings, tailored financial backing, and global supplies logistics. We leverage our diverse holdings to orchestrate seamless, vertically-integrated corporate solutions and boutique events with absolute precision.</p>
-            
-            <ul class="bento-list">
-                <li>
-                    <strong>Group Synergy</strong>
-                    <p class="text-muted">Cross-divisional alignment for camp setups, catering resources, and delivery trucks.</p>
-                </li>
-                <li>
-                    <strong>Holding Quality</strong>
-                    <p class="text-muted">Meticulous standards enforced across elite culinary divisions, land portfolios, and imports.</p>
-                </li>
-                <li>
-                    <strong>In-House Capital</strong>
-                    <p class="text-muted">Direct financial backing to structure flexible payments and scale mega festival programs.</p>
-                </li>
-                <li>
-                    <strong>15+ Years Excellence</strong>
-                    <p class="text-muted">Managing elite timelines, custom designs, and highly trained operational stewardship.</p>
-                </li>
-            </ul>
         </div>
     </div>
 </section>
 
-<!-- The Primus Group Ecosystem -->
-<section class="section-padding" style="background-color: var(--color-surface-soft); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);">
+<!-- Alternating Asymmetric Services Section -->
+<section class="section-padding services-section" id="services">
     <div class="container">
-        <div class="editorial-title-block text-center reveal-fade-up">
-            <span class="uppercase-label" style="color: var(--color-blue);">The Primus Group</span>
-            <h2>Multi-Sector Conglomerate Ecosystem</h2>
-            <p class="text-muted" style="max-width: 600px; margin: 16px auto 0; font-size: 1.05rem;">In addition to our hallmark culinary and camp event operations, the Primus Group executes bespoke services across real estate development, financial advisory, and global general supplies.</p>
+        <!-- Section Header -->
+        <div class="section-header text-center reveal-fade-up" style="margin-bottom: 80px;">
+            <span class="section-subtitle-pill">OUR CORE SPECIALIZATIONS</span>
+            <h2 class="section-title" style="font-family: var(--font-serif); font-size: 2.5rem;">Focused Expertise</h2>
+            <p class="section-desc" style="max-width: 600px; margin: 12px auto 0;">
+                By focusing our assets entirely on high-end catering and managed camp retreats, we deliver impeccable, distraction-free corporate stewardship.
+            </p>
         </div>
-        
-        <div class="divisions-grid">
-            <!-- Division 1 -->
-            <div class="division-card reveal-fade-up animation-delay-1">
-                <div class="division-icon">
-                    <span class="material-symbols-outlined">restaurant</span>
-                </div>
-                <h3>Catering &amp; Camp Events</h3>
-                <p>Delivering michelin-class culinary hospitality, bespoke corporate boardroom dining, open-air festivals, and premium canvas camp event retreats.</p>
-                <a href="services.php" class="division-link">Explore Division <span class="material-symbols-outlined">arrow_right_alt</span></a>
-            </div>
+
+        <!-- Services Alternating Layout -->
+        <div class="services-layout-grid">
             
-            <!-- Division 2 -->
-            <div class="division-card reveal-fade-up animation-delay-2">
-                <div class="division-icon">
-                    <span class="material-symbols-outlined">domain</span>
+            <!-- Service Block 1: Culinary Catering -->
+            <div class="service-row-asymmetric reveal-fade-up">
+                <!-- Left Text Column -->
+                <div class="service-text-card">
+                    <h3 class="service-row-title-serif">Michelin-Class Culinary Catering</h3>
+                    <p class="service-row-desc-para">
+                        Bespoke menu planning, fine boardroom dining, executive banquets, and high-yield corporate event culinary solutions engineered to perfection.
+                    </p>
+                    <ul class="service-bullets-list">
+                        <li>
+                            <span class="bullet">&#9679;</span>
+                            Executive Boardroom Banquets
+                        </li>
+                        <li>
+                            <span class="bullet">&#9679;</span>
+                            Artisanal Custom Menu Architecture
+                        </li>
+                        <li>
+                            <span class="bullet">&#9679;</span>
+                            Michelin-Caliber Culinary Stewards
+                        </li>
+                    </ul>
+                    <div class="service-actions-inline">
+                        <a href="#contact" class="btn-pill">Explore Menu</a>
+                        <a href="#contact" class="service-arrow-link">
+                            Consult Specialist
+                            <span class="material-symbols-outlined" style="font-size: 16px;">arrow_right_alt</span>
+                        </a>
+                    </div>
                 </div>
-                <h3>Real Estate &amp; Venues</h3>
-                <p>Securing premium event landscapes, luxury residential holdings, and managing exclusive glamping retreat grounds and vacation property developments.</p>
-                <a href="real-estate.php" class="division-link">Explore Division <span class="material-symbols-outlined">arrow_right_alt</span></a>
+                <!-- Right Image Column (Floating Card Frame from Pinterest) -->
+                <div class="service-image-float-wrapper">
+                    <img class="service-image-float" src="c2.jpg" alt="Premium gourmet culinary presentation">
+                </div>
             </div>
-            
-            <!-- Division 3 -->
-            <div class="division-card reveal-fade-up animation-delay-3">
-                <div class="division-icon">
-                    <span class="material-symbols-outlined">account_balance_wallet</span>
+
+            <!-- Service Block 2: Luxury Camp Operations (Swapped Columns) -->
+            <div class="service-row-asymmetric swapped reveal-fade-up">
+                <!-- Left Image Column (Floating Card Frame from Pinterest) -->
+                <div class="service-image-float-wrapper">
+                    <img class="service-image-float" src="c1.jpg" alt="Premium luxury base-camp glamping retreat">
                 </div>
-                <h3>Financial Services</h3>
-                <p>Providing bespoke financial consulting, structured asset-backing, asset management, and flexible financing structures for large-scale public festivals.</p>
-                <a href="financial-services.php" class="division-link">Explore Division <span class="material-symbols-outlined">arrow_right_alt</span></a>
+                <!-- Right Text Column -->
+                <div class="service-text-card">
+                    <h3 class="service-row-title-serif">Luxury Base-Camps &amp; Managed Retreats</h3>
+                    <p class="service-row-desc-para">
+                        Complete canvas glamping retreat deployments, scenic ground leasing, heavy canvas camp gear imports, and comprehensive wilderness hospitality.
+                    </p>
+                    <ul class="service-bullets-list">
+                        <li>
+                            <span class="bullet">&#9679;</span>
+                            Premium Wilderness Glamping Retreats
+                        </li>
+                        <li>
+                            <span class="bullet">&#9679;</span>
+                            Full-Scale Base-Camp Deployments &amp; Logistics
+                        </li>
+                        <li>
+                            <span class="bullet">&#9679;</span>
+                            Complete High-End Hospitality Coordinators
+                        </li>
+                    </ul>
+                    <div class="service-actions-inline">
+                        <a href="#contact" class="btn-pill">Request Quote</a>
+                        <a href="#contact" class="service-arrow-link">
+                            Plan Retreat
+                            <span class="material-symbols-outlined" style="font-size: 16px;">arrow_right_alt</span>
+                        </a>
+                    </div>
+                </div>
             </div>
-            
-            <!-- Division 4 -->
-            <div class="division-card reveal-fade-up animation-delay-4">
-                <div class="division-icon">
-                    <span class="material-symbols-outlined">local_shipping</span>
-                </div>
-                <h3>General Supplies</h3>
-                <p>Executing high-volume provision services, hospitality kitchen equipment, canvas camp gear imports, and robust commercial supplies logistics.</p>
-                <a href="general-supplies.php" class="division-link">Explore Division <span class="material-symbols-outlined">arrow_right_alt</span></a>
+
+        </div>
+    </div>
+</section>
+
+<!-- Inquiry & Connection Section (Pinterest Banner Style) -->
+<section class="section-padding connection-banner-section" id="contact">
+    <div class="container">
+        <div class="connection-banner-content">
+            <span class="hero-subtitle-caps" style="margin-bottom: 16px;">DIRECT CORRESPONDENCE</span>
+            <h2 class="connection-banner-title-serif">Initiate Your Experience</h2>
+            <p class="connection-banner-desc-para">
+                Whether staging an executive corporate boardroom retreat or a gourmet banquet, get in touch with our division coordinators to secure dates and design bespoke options.
+            </p>
+
+            <!-- Minimalist Form Card Container -->
+            <div class="minimalist-form-card reveal-fade-up">
+                <form action="#contact" method="POST" id="inquiryForm">
+                    <div class="form-grid-row">
+                        <div class="form-field-group">
+                            <label for="name">Your Name *</label>
+                            <input type="text" name="name" id="name" required placeholder="e.g., John Doe" class="form-field-input">
+                        </div>
+                        <div class="form-field-group">
+                            <label for="company">Company Name</label>
+                            <input type="text" name="company" id="company" placeholder="e.g., Corp Inc" class="form-field-input">
+                        </div>
+                    </div>
+
+                    <div class="form-grid-row">
+                        <div class="form-field-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" name="email" id="email" required placeholder="e.g., john@company.com" class="form-field-input">
+                        </div>
+                        <div class="form-field-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" name="phone" id="phone" placeholder="e.g., +233..." class="form-field-input">
+                        </div>
+                    </div>
+
+                    <div class="form-field-group">
+                        <label for="service">Service of Interest *</label>
+                        <select name="service" id="service" required class="form-field-input">
+                            <option value="">-- SELECT A SERVICE DIVISION --</option>
+                            <option value="catering">Michelin-Class Culinary Catering</option>
+                            <option value="camps">Luxury Base-Camps &amp; Managed Retreats</option>
+                            <option value="both">Both Catering &amp; Camp Operations</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field-group" style="margin-bottom: 32px;">
+                        <label for="message">Your Specifications</label>
+                        <textarea name="message" id="message" rows="4" placeholder="Specify your venue requirements, guest capacity, or camp logistics needs..." class="form-field-input"></textarea>
+                    </div>
+
+                    <button type="submit" class="form-submit-pill-btn">Submit Inquiry</button>
+                </form>
+
+                <!-- Inline PHP Status Alerts -->
+                <?php if (!empty($successMsg)): ?>
+                    <div class="status-dialog-box status-dialog-success">
+                        ✓ <?php echo htmlspecialchars($successMsg); ?>
+                    </div>
+                <?php elseif (!empty($errorMsg)): ?>
+                    <div class="status-dialog-box status-dialog-error">
+                        ✗ <?php echo htmlspecialchars($errorMsg); ?>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Review Grid Section (What Our Guests Say) -->
-<section class="section-padding container">
-    <div class="editorial-title-block text-center reveal-fade-up">
-        <span>Testimonials</span>
-        <h2>What Our Guests Say</h2>
-        <p class="text-muted" style="max-width: 600px; margin: 16px auto 0; font-size: 1.05rem;">Real feedback regarding our executive boardroom menus, custom camp glamping retreats, and artisan culinary standards.</p>
-    </div>
-
-    <div class="reviews-grid">
-        <!-- Review 1 -->
-        <div class="review-card reveal-fade-up animation-delay-1">
-            <span class="double-quote">&ldquo;</span>
-            <div class="review-stars">
-                <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
-            </div>
-            <p class="review-desc">Absolutely outstanding! The corporate board lunches are incredibly delicious, and the team's coordination is perfect for formal boardroom meetings. Highly recommend.</p>
-            <div class="review-user-row">
-                <div class="review-avatar-frame">
-                    <img class="review-avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAe2WCEFNVfWshnEhoxb0Sg5DOV5iwM7OtpUWKntmQHvRY1k8heAadqH59pE6NOn_p4yQNwiWxw2gjvM4EkTyxH7Xvd-iG2sRa3hQzFD4Hwqv9DVBExU5ML3AghLzTqpPd3fUGHYrwzoNqmGKlBPyB7dO0JKcWngtM56IIpLidOxO0dj8SoPfspqhaZSkiUkmPUth4ngIlhLmayVJnC5UZEmAj211iTCtThEpfHwM-Rv2bmfI0PBHSDjAi1POmOEGP2uvo54ykaEUiI" alt="Sarah Johnson Profile">
-                </div>
-                <div>
-                    <span class="review-user-name">Sarah Johnson</span>
-                    <span class="review-user-role">Corporate Coordinator</span>
-                </div>
-            </div>
+<!-- Rebuilt Premium Inquiry Success Modal -->
+<div id="inquiryModal" class="modal-overlay" aria-hidden="true">
+    <div class="modal-card">
+        <div class="modal-icon-container">
+            <span class="material-symbols-outlined modal-success-icon">task_alt</span>
         </div>
-
-        <!-- Review 2 -->
-        <div class="review-card reveal-fade-up animation-delay-2">
-            <span class="double-quote">&ldquo;</span>
-            <div class="review-stars">
-                <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
-            </div>
-            <p class="review-desc">We have partnered with Primus for over 3 years now. Their luxury camp events, tailored menu planning, and hospitality coordinators are completely reliable and professional.</p>
-            <div class="review-user-row">
-                <div class="review-avatar-frame">
-                    <img class="review-avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHLpQ2qBvUNe6V46Ewn1sIUGGoA571sTYIa5GmmrF95LmAJQPSs7Ijz3Kx_mNYQYtN9FmTD76D9iuEU4eOL7jYCylC2zkXS_n_sDS9JVJ7G0wb4e8nZDfNC6qJdTIu115MYMoPOZtLlwJxtPqKUXcR1VoYVf3ybUJFiN-Fbyy3I6LlMEzmWqYtgsze3_1NEigh8UrLSH3mQUmWz-yHiG0WsSiXHiFijswdvD4zm1NqADdpG357dhfq_ftsXjfIiruMc9PCvTIFOm5u" alt="Michael Chen Profile">
-                </div>
-                <div>
-                    <span class="review-user-name">Michael Chen</span>
-                    <span class="review-user-role">Events Director</span>
-                </div>
-            </div>
-        </div>
+        <h3 class="modal-title-serif">Inquiry Transmitted</h3>
+        <p class="modal-desc-para" id="modalMessage">
+            Your specifications have been safely logged in our administrative portal. A division steward will contact you shortly.
+        </p>
+        <button type="button" class="btn-pill modal-close-btn" id="closeModalBtn">Acknowledge</button>
     </div>
+</div>
 
-    <!-- Average reviews badge exactly like reference -->
-    <div class="average-reviews-badge reveal-fade-up">
-        <div class="avg-left-stars">
-            <h3>4.9</h3>
-            <div class="review-stars" style="margin-bottom: 0; margin-top: 4px; justify-content: center;">
-                <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
-            </div>
-            <p class="text-muted" style="font-size: 0.8rem; margin-top: 4px;">Average Rating</p>
-        </div>
-        <div class="avg-right-cnt">
-            <h3>2,500+</h3>
-            <p>Active Guest &amp;<br>Client Reviews</p>
-        </div>
-    </div>
-</section>
-
-<!-- Call to Action Section -->
-<section class="section-padding text-center container reveal-fade-up" style="border-top: 1px solid var(--color-border);">
-    <span class="uppercase-label" style="color: var(--color-blue);">Ready to Partner?</span>
-    <h2 style="font-size: 2.6rem; margin-bottom: 16px;">Deploy Luxury Camp Events &amp; Dining Today</h2>
-    <p class="text-muted" style="max-width: 600px; margin: 0 auto 40px; font-size: 1.05rem;">Connect with our event coordinators to establish customized menus, glamping camp layouts, or full banquet designs.</p>
-    <div class="hero-actions">
-        <a href="contact.php" class="btn btn-primary">Start a Quote</a>
-        <a href="contact.php" class="btn btn-secondary">Consult Specialists</a>
-    </div>
-</section>
+<?php if (!empty($successMsg)): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('inquiryModal');
+        const modalMsg = document.getElementById('modalMessage');
+        if (modal) {
+            modalMsg.textContent = <?php echo json_encode($successMsg); ?>;
+            modal.classList.add('active');
+            
+            // Close button control
+            const closeBtn = document.getElementById('closeModalBtn');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function() {
+                    modal.classList.remove('active');
+                });
+            }
+        }
+    });
+</script>
+<?php endif; ?>
 
 <?php
 require_once __DIR__ . '/includes/footer.php';

@@ -9,6 +9,9 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Secure Administrative Password (for admin-inquiries.php access)
+define('ADMIN_PASSWORD', 'PrimusSecure2026!');
+
 // Global timezone
 date_default_timezone_set('America/Chicago');
 
