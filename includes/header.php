@@ -138,6 +138,11 @@ if (!isset($pageTitle)) {
                     <li>
                         <a href="contact.php" class="nav-link <?php echo getActivePageClass('contact.php'); ?>">Contact</a>
                     </li>
+                    <li>
+                        <a href="demos/index.php" class="nav-link design-portfolio-link" style="color: #FF7C3B; font-weight: 700; border: 1px solid rgba(255, 124, 59, 0.4); padding: 8px 16px; border-radius: 99px; display: inline-flex; align-items: center; gap: 6px; margin-left: 10px;">
+                            <span class="material-symbols-outlined" style="font-size: 18px;">layers</span> Design Demos
+                        </a>
+                    </li>
                     <!-- Mobile-Only CTA in Dropdown Menu -->
                     <li class="mobile-only-cta">
                         <a href="contact.php" class="btn btn-primary" style="margin: 20px auto; display: inline-flex; width: calc(100% - 48px); justify-content: center;">
