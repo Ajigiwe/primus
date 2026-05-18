@@ -1,7 +1,7 @@
 <?php
 /**
  * Primus Group Holdings - Design Direction Showcase Hub
- * High-end visual gateway to launch all 5 theme variants.
+ * High-end visual gateway to launch our 2 elite inline theme variants.
  */
 ?>
 <!DOCTYPE html>
@@ -13,7 +13,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <!-- Google Material Symbols -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
     
@@ -28,7 +28,6 @@
             --color-accent-gold: #d4af37;
             --color-accent-cyan: #00f2fe;
             --color-accent-coral: #ef476f;
-            --color-accent-yellow: #ffd166;
             --font-sans: 'Outfit', sans-serif;
             --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -75,9 +74,9 @@
         }
 
         .container {
-            max-width: 1300px;
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 60px 24px;
+            padding: 80px 24px;
         }
 
         /* Header Block */
@@ -147,18 +146,13 @@
             margin: 0 auto;
         }
 
-        /* Showcase Grid */
+        /* Showcase Grid - Centered 2 Columns */
         .showcase-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 32px;
-            margin-bottom: 60px;
-        }
-
-        @media (max-width: 1024px) {
-            .showcase-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+            max-width: 900px;
+            margin: 0 auto 60px;
         }
 
         @media (max-width: 768px) {
@@ -202,10 +196,7 @@
             width: 100%;
         }
 
-        .showcase-card.theme-editorial .card-header-accent { background: var(--color-accent-gold); }
-        .showcase-card.theme-minimalist .card-header-accent { background: #ffffff; }
         .showcase-card.theme-futuristic .card-header-accent { background: linear-gradient(90deg, var(--color-accent-cyan), var(--color-accent-blue)); }
-        .showcase-card.theme-brutalist .card-header-accent { background: var(--color-accent-yellow); }
         .showcase-card.theme-cinematic .card-header-accent { background: var(--color-accent-coral); }
 
         /* Card Content */
@@ -228,10 +219,7 @@
             align-self: flex-start;
         }
 
-        .theme-editorial .card-badge { background: rgba(212, 175, 55, 0.15); color: var(--color-accent-gold); }
-        .theme-minimalist .card-badge { background: rgba(255, 255, 255, 0.1); color: #ffffff; }
         .theme-futuristic .card-badge { background: rgba(0, 242, 254, 0.15); color: var(--color-accent-cyan); }
-        .theme-brutalist .card-badge { background: rgba(255, 209, 102, 0.15); color: var(--color-accent-yellow); }
         .theme-cinematic .card-badge { background: rgba(239, 71, 111, 0.15); color: var(--color-accent-coral); }
 
         .card-body h3 {
@@ -277,7 +265,7 @@
 
         .spec-value {
             color: #ffffff;
-            font-family: 'JetBrains Mono', monospace;
+            font-family: monospace;
             font-weight: 500;
         }
 
@@ -321,24 +309,6 @@
             transition: var(--transition-smooth);
         }
 
-        .theme-editorial .launch-btn {
-            background: linear-gradient(135deg, #c5a880, #d4af37);
-            color: #070913;
-        }
-        .theme-editorial .launch-btn:hover {
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
-            transform: scale(1.02);
-        }
-
-        .theme-minimalist .launch-btn {
-            background: #ffffff;
-            color: #111111;
-        }
-        .theme-minimalist .launch-btn:hover {
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
-            transform: scale(1.02);
-        }
-
         .theme-futuristic .launch-btn {
             background: linear-gradient(135deg, var(--color-accent-cyan), var(--color-accent-blue));
             color: #060813;
@@ -346,17 +316,6 @@
         .theme-futuristic .launch-btn:hover {
             box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
             transform: scale(1.02);
-        }
-
-        .theme-brutalist .launch-btn {
-            background: var(--color-accent-yellow);
-            color: #000000;
-            border: 2px solid #000000;
-            box-shadow: 4px 4px 0 #000000;
-        }
-        .theme-brutalist .launch-btn:hover {
-            transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0 #000000;
         }
 
         .theme-cinematic .launch-btn {
@@ -398,92 +357,18 @@
             </div>
             
             <h1>Select A Design Direction</h1>
-            <p>Explore five completely custom visual architectures. Each direction completely alters typography, colors, layouts, loading transitions, and visual hierarchies designed to present Primus Group Holdings.</p>
+            <p>Explore two highly customized inline visual architectures. Each direction completely alters typography, colors, layouts, loading transitions, and visual hierarchies designed to present Primus Group Holdings.</p>
         </header>
 
         <div class="showcase-grid">
-
-            <!-- Theme 1: Royal Editorial -->
-            <div class="showcase-card theme-editorial">
-                <div class="card-header-accent"></div>
-                <div class="card-body">
-                    <span class="card-badge">Direction 01</span>
-                    <h3>Imperial Luxury</h3>
-                    <p>Ornate, balanced, and deeply prestigious. Modeled after legacy luxury real estate portfolios and premium hospitality houses. Evokes absolute trust and elite standing.</p>
-                    
-                    <div class="tech-specs">
-                        <div class="spec-item">
-                            <span class="spec-label">Primary Font</span>
-                            <span class="spec-value">Playfair Display</span>
-                        </div>
-                        <div class="spec-item">
-                            <span class="spec-label">Secondary Font</span>
-                            <span class="spec-value">Plus Jakarta Sans</span>
-                        </div>
-                        <div class="spec-item">
-                            <span class="spec-label">Transition Style</span>
-                            <span class="spec-value">Classic Gold Pulsar</span>
-                        </div>
-                    </div>
-
-                    <div class="color-palette">
-                        <div class="color-bubble" style="background-color: #0b132b;"></div>
-                        <div class="color-bubble" style="background-color: #d4af37;"></div>
-                        <div class="color-bubble" style="background-color: #faf5ec;"></div>
-                        <div class="color-bubble" style="background-color: #fffdf9;"></div>
-                    </div>
-
-                    <a href="theme1-editorial/index.html" class="launch-btn">
-                        Launch Experience
-                        <span class="material-symbols-outlined" style="font-size: 18px;">open_in_new</span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Theme 2: Swiss Minimalist -->
-            <div class="showcase-card theme-minimalist">
-                <div class="card-header-accent"></div>
-                <div class="card-body">
-                    <span class="card-badge">Direction 02</span>
-                    <h3>Swiss Precision</h3>
-                    <p>Structured, modern, high-density, and absolutely flat. Emphasizes mathematical alignments, pure horizontal/vertical rules, and extreme typographic clarity.</p>
-                    
-                    <div class="tech-specs">
-                        <div class="spec-item">
-                            <span class="spec-label">Primary Font</span>
-                            <span class="spec-value">Inter (Regular)</span>
-                        </div>
-                        <div class="spec-item">
-                            <span class="spec-label">Secondary Font</span>
-                            <span class="spec-value">JetBrains Mono</span>
-                        </div>
-                        <div class="spec-item">
-                            <span class="spec-label">Transition Style</span>
-                            <span class="spec-value">Linear Razor Bar</span>
-                        </div>
-                    </div>
-
-                    <div class="color-palette">
-                        <div class="color-bubble" style="background-color: #111111;"></div>
-                        <div class="color-bubble" style="background-color: #f8f9fa;"></div>
-                        <div class="color-bubble" style="background-color: #e2e8f0;"></div>
-                        <div class="color-bubble" style="background-color: #2b6cb0;"></div>
-                    </div>
-
-                    <a href="theme2-minimalist/index.html" class="launch-btn">
-                        Launch Experience
-                        <span class="material-symbols-outlined" style="font-size: 18px;">open_in_new</span>
-                    </a>
-                </div>
-            </div>
 
             <!-- Theme 3: Neo-Glassmorphism -->
             <div class="showcase-card theme-futuristic">
                 <div class="card-header-accent"></div>
                 <div class="card-body">
-                    <span class="card-badge">Direction 03</span>
+                    <span class="card-badge">Direction 01</span>
                     <h3>Neo-Glassmorphism</h3>
-                    <p>Sleek, futuristic, high-tech dashboard styling. Utilizes layered frosted-glass panels, neon backlighting shadows, and fluid hardware-accelerated animations.</p>
+                    <p>Sleek, futuristic, high-tech cloud dashboard styling. Utilizes frosted-glass panels, neon backlighting shadows, dynamic cursor coordinate physics, and fluid animations.</p>
                     
                     <div class="tech-specs">
                         <div class="spec-item">
@@ -496,55 +381,18 @@
                         </div>
                         <div class="spec-item">
                             <span class="spec-label">Transition Style</span>
-                            <span class="spec-value">Neon Orbital Ring</span>
+                            <span class="spec-value">Neon Orbital Spinner</span>
                         </div>
                     </div>
 
                     <div class="color-palette">
                         <div class="color-bubble" style="background-color: #060813;"></div>
                         <div class="color-bubble" style="background-color: #00f2fe;"></div>
-                        <div class="color-bubble" style="background-color: #4facfe;"></div>
-                        <div class="color-bubble" style="background-color: rgba(20,24,45,0.85);"></div>
+                        <div class="color-bubble" style="background-color: #3b82f6;"></div>
+                        <div class="color-bubble" style="background-color: rgba(15,20,38,0.75);"></div>
                     </div>
 
                     <a href="theme3-futuristic/index.html" class="launch-btn">
-                        Launch Experience
-                        <span class="material-symbols-outlined" style="font-size: 18px;">open_in_new</span>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Theme 4: Bold Brutalist -->
-            <div class="showcase-card theme-brutalist">
-                <div class="card-header-accent"></div>
-                <div class="card-body">
-                    <span class="card-badge">Direction 04</span>
-                    <h3>Bold Brutalist</h3>
-                    <p>Confident, raw, high-impact block branding. Built with massive heavy typography, thick black borders, solid zero-blur shadows, and vivid high-energy badges.</p>
-                    
-                    <div class="tech-specs">
-                        <div class="spec-item">
-                            <span class="spec-label">Primary Font</span>
-                            <span class="spec-value">Plus Jakarta (Black)</span>
-                        </div>
-                        <div class="spec-item">
-                            <span class="spec-label">Secondary Font</span>
-                            <span class="spec-value">JetBrains Mono</span>
-                        </div>
-                        <div class="spec-item">
-                            <span class="spec-label">Transition Style</span>
-                            <span class="spec-value">Solid Block Blocker</span>
-                        </div>
-                    </div>
-
-                    <div class="color-palette">
-                        <div class="color-bubble" style="background-color: #ffd166;"></div>
-                        <div class="color-bubble" style="background-color: #ef476f;"></div>
-                        <div class="color-bubble" style="background-color: #070a13;"></div>
-                        <div class="color-bubble" style="background-color: #ffffff;"></div>
-                    </div>
-
-                    <a href="theme4-brutalist/index.html" class="launch-btn">
                         Launch Experience
                         <span class="material-symbols-outlined" style="font-size: 18px;">open_in_new</span>
                     </a>
@@ -555,7 +403,7 @@
             <div class="showcase-card theme-cinematic">
                 <div class="card-header-accent"></div>
                 <div class="card-body">
-                    <span class="card-badge">Direction 05</span>
+                    <span class="card-badge">Direction 02</span>
                     <h3>Split Cinematic</h3>
                     <p>Immersive visual portfolio storytelling. Splitting the viewport: the left half is an active, crossfading full-screen photography deck; the right is scrollable text descriptions.</p>
                     
@@ -570,7 +418,7 @@
                         </div>
                         <div class="spec-item">
                             <span class="spec-label">Transition Style</span>
-                            <span class="spec-value">Cinematic Focal Zoom</span>
+                            <span class="spec-value">Vertical Split Slide</span>
                         </div>
                     </div>
 
@@ -591,7 +439,7 @@
         </div>
 
         <footer>
-            <p>&copy; 2026 <strong>Primus Group Holdings</strong>. Design Portfolio variants built natively with HTML5, CSS3, &amp; ES6.</p>
+            <p>&copy; 2026 <strong>Primus Group Holdings</strong>. Design Portfolio variants compiled into fully self-contained HTML templates.</p>
         </footer>
 
     </div>

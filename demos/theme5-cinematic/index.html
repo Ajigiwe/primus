@@ -10,7 +10,547 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <!-- Google Material Symbols -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        /* ==========================================================================
+           Split Cinematic Theme (Cinematic Immersive Split Variant) - INLINE STYLE
+           ========================================================================== */
+
+        :root {
+            --color-bg-dark: #121212;
+            --color-bg-surface: #1a1a1a;
+            --color-gold: #c5a880;
+            --color-gold-bright: #e5cda8;
+            --color-text-white: #ffffff;
+            --color-text-muted: #999999;
+            --font-serif: 'Playfair Display', serif;
+            --font-sans: 'Inter', sans-serif;
+            --transition-cinematic: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--color-bg-dark);
+            color: var(--color-text-white);
+            font-family: var(--font-sans);
+            line-height: 1.7;
+            overflow: hidden; /* Lock main body overflow since split right will scroll */
+        }
+
+        /* Floating Return Button */
+        .hub-back-btn {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            z-index: 1001;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: rgba(18, 18, 18, 0.85);
+            border: 1px solid var(--color-gold);
+            color: var(--color-gold);
+            text-decoration: none;
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            padding: 10px 18px;
+            border-radius: 2px;
+            backdrop-filter: blur(8px);
+            transition: var(--transition-cinematic);
+        }
+
+        .hub-back-btn:hover {
+            background-color: var(--color-gold);
+            color: var(--color-bg-dark);
+            transform: scale(1.03);
+        }
+
+        /* 🎬 Split-Screen Cinematic Loader */
+        #loader-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s;
+        }
+
+        .loader-split-left, .loader-split-right {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 50%;
+            background-color: var(--color-bg-dark);
+            transition: transform 0.8s cubic-bezier(0.76, 0, 0.24, 1);
+            z-index: -1;
+        }
+
+        .loader-split-left { left: 0; }
+        .loader-split-right { right: 0; }
+
+        #loader-overlay.loaded .loader-split-left { transform: translateX(-100%); }
+        #loader-overlay.loaded .loader-split-right { transform: translateX(100%); }
+
+        .loader-content {
+            text-align: center;
+            transition: opacity 0.4s ease;
+        }
+
+        #loader-overlay.loaded .loader-content {
+            opacity: 0;
+        }
+
+        .cinematic-title {
+            font-family: var(--font-serif);
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: 0.3em;
+            color: var(--color-gold);
+            margin-bottom: 20px;
+        }
+
+        .loading-line {
+            width: 150px;
+            height: 1px;
+            background-color: var(--color-gold);
+            margin: 0 auto 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading-line::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background-color: var(--color-text-white);
+            animation: loadingLineAnim 1.4s ease-in-out infinite;
+        }
+
+        .loader-status {
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            color: var(--color-text-muted);
+        }
+
+        @keyframes loadingLineAnim {
+            0% { left: -100%; }
+            50% { left: 0%; }
+            100% { left: 100%; }
+        }
+
+        /* Split Layout */
+        .split-viewport {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        @media (max-width: 900px) {
+            body { overflow: auto; }
+            .split-viewport { flex-direction: column; height: auto; overflow: auto; }
+        }
+
+        /* Left Sticky Side */
+        .split-left {
+            width: 50%;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            background-color: #000000;
+        }
+
+        @media (max-width: 900px) {
+            .split-left { width: 100%; height: 50vh; position: relative; }
+        }
+
+        .cinematic-deck {
+            position: absolute;
+            inset: 0;
+        }
+
+        .deck-slide {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transform: scale(1.08) rotate(0.01deg);
+            transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .deck-slide.active {
+            opacity: 0.65;
+            transform: scale(1.0);
+        }
+
+        .cinematic-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(18,18,18,0) 60%, rgba(18,18,18,0.95) 100%);
+            z-index: 1;
+        }
+
+        @media (max-width: 900px) {
+            .cinematic-overlay {
+                background: linear-gradient(180deg, rgba(18,18,18,0) 60%, rgba(18,18,18,0.95) 100%);
+            }
+        }
+
+        .left-brand-block {
+            position: absolute;
+            bottom: 50px;
+            left: 50px;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .gold-crest {
+            height: 48px;
+            width: auto;
+            align-self: flex-start;
+        }
+
+        .brand-subtext {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            letter-spacing: 0.2em;
+            color: var(--color-gold);
+        }
+
+        /* Right Scrollable Side */
+        .split-right {
+            width: 50%;
+            height: 100vh;
+            overflow-y: scroll;
+            padding: 0 80px;
+            scroll-behavior: smooth;
+        }
+
+        @media (max-width: 900px) {
+            .split-right { width: 100%; height: auto; padding: 0 24px; overflow-y: visible; }
+        }
+
+        /* Global Nav Bar inside right panel */
+        .cinematic-header {
+            padding: 40px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            position: sticky;
+            top: 0;
+            background-color: rgba(18, 18, 18, 0.95);
+            z-index: 10;
+        }
+
+        .cinematic-nav {
+            display: flex;
+            gap: 28px;
+        }
+
+        .nav-item {
+            font-family: var(--font-serif);
+            font-style: italic;
+            color: var(--color-text-muted);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: var(--transition-cinematic);
+            position: relative;
+            padding-bottom: 4px;
+        }
+
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--color-gold);
+            transition: var(--transition-cinematic);
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--color-gold);
+        }
+
+        .nav-item:hover::after, .nav-item.active::after {
+            width: 100%;
+        }
+
+        /* Scroll Sections */
+        .cinematic-section {
+            padding: 100px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .kicker {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.25em;
+            color: var(--color-gold);
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        .cinematic-section h1 {
+            font-family: var(--font-serif);
+            font-size: 3.6rem;
+            font-weight: 400;
+            line-height: 1.15;
+            margin-bottom: 24px;
+        }
+
+        .cinematic-section h2 {
+            font-family: var(--font-serif);
+            font-size: 2.6rem;
+            font-weight: 400;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 600px) {
+            .cinematic-section h1 { font-size: 2.4rem; }
+            .cinematic-section h2 { font-size: 1.9rem; }
+        }
+
+        .quote-text {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 1.3rem;
+            color: var(--color-gold);
+            margin-bottom: 30px;
+            border-left: 2px solid var(--color-gold);
+            padding-left: 20px;
+        }
+
+        .body-text {
+            color: var(--color-text-muted);
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin-bottom: 40px;
+        }
+
+        .scroll-prompt {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 0.9rem;
+            color: var(--color-gold);
+        }
+
+        .anim-scroll {
+            animation: scrollBounce 1.5s ease-in-out infinite;
+        }
+
+        @keyframes scrollBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(6px); }
+        }
+
+        /* Cinematic Interactive Hover Cards */
+        .cinematic-sectors-list {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .sector-node-row {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            padding: 30px;
+            background-color: var(--color-bg-surface);
+            border: 1px solid rgba(255,255,255,0.03);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition-cinematic);
+        }
+
+        .sector-node-row:hover, .sector-node-row.active {
+            background-color: rgba(197, 168, 128, 0.08);
+            border-color: var(--color-gold);
+            transform: translateX(8px);
+        }
+
+        .node-num {
+            font-family: var(--font-serif);
+            font-size: 2rem;
+            color: var(--color-gold);
+            line-height: 1;
+        }
+
+        .node-text h3 {
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .node-text p {
+            color: var(--color-text-muted);
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        /* Metrics */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 600px) {
+            .metrics-grid { grid-template-columns: 1fr; }
+        }
+
+        .metrics-grid .metric-card {
+            background-color: var(--color-bg-surface);
+            border: 1px solid rgba(255,255,255,0.03);
+            padding: 24px 16px;
+            border-radius: 2px;
+            text-align: center;
+        }
+
+        .metrics-grid .metric-val {
+            display: block;
+            font-family: var(--font-serif);
+            font-size: 2rem;
+            color: var(--color-gold);
+            margin-bottom: 8px;
+        }
+
+        .metrics-grid .metric-lbl {
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+        }
+
+        /* Cinematic Contact Form */
+        .cinematic-form {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row { grid-template-columns: 1fr; }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--color-gold);
+            letter-spacing: 0.05em;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 12px 16px;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 2px;
+            background-color: var(--color-bg-surface);
+            color: #ffffff;
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition-cinematic);
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--color-gold);
+            background-color: rgba(255,255,255,0.02);
+        }
+
+        .form-group select option {
+            background-color: var(--color-bg-dark);
+        }
+
+        .btn-cinematic-submit {
+            background-color: var(--color-gold);
+            color: var(--color-bg-dark);
+            border: 1px solid var(--color-gold);
+            padding: 16px;
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition-cinematic);
+            align-self: flex-start;
+        }
+
+        .btn-cinematic-submit:hover {
+            background-color: transparent;
+            color: var(--color-gold);
+            box-shadow: 0 0 15px rgba(197, 168, 128, 0.3);
+        }
+
+        /* Status Alert */
+        .cinematic-status-alert {
+            margin-top: 20px;
+            padding: 16px;
+            border: 1px solid var(--color-gold);
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .cinematic-status-success {
+            background-color: rgba(197, 168, 128, 0.05);
+            color: var(--color-gold-bright);
+        }
+
+        /* Footer Inside Right Panel */
+        .cinematic-footer {
+            padding: 80px 0 100px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+        }
+
+        .cinematic-footer p {
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+            margin-bottom: 8px;
+        }
+
+        .cinematic-footer .contacts {
+            color: var(--color-gold);
+            font-family: var(--font-serif);
+            font-style: italic;
+        }
+    </style>
 </head>
 <body>
 
@@ -199,6 +739,114 @@
 
     </div>
 
-    <script src="script.js"></script>
+    <!-- Symmetrical Inline Logic Script -->
+    <script>
+        /**
+         * Theme 5: Split Cinematic - Inline Controller logic
+         */
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // 1. Split Cinematic Loader Overlay
+            const loader = document.getElementById('loader-overlay');
+            
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    loader.classList.add('loaded');
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                    }, 800); // Wait for transition splits to finish sliding out
+                }, 1000);
+            });
+
+            // Fail-safe
+            setTimeout(() => {
+                if (loader && !loader.classList.contains('loaded')) {
+                    loader.classList.add('loaded');
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                    }, 800);
+                }
+            }, 3000);
+
+            // 2. Interactive Image Projection Deck Swapper
+            const slides = document.querySelectorAll('.deck-slide');
+            const triggers = document.querySelectorAll('[data-trigger]');
+
+            function swapProjection(targetNodeId) {
+                slides.forEach(slide => {
+                    slide.classList.remove('active');
+                    if (slide.getAttribute('data-node') === targetNodeId) {
+                        slide.classList.add('active');
+                    }
+                });
+            }
+
+            // Hover listeners for divisions card triggers
+            triggers.forEach(trigger => {
+                trigger.addEventListener('mouseenter', () => {
+                    const targetNode = trigger.getAttribute('data-trigger');
+                    swapProjection(targetNode);
+                    
+                    // Mark node row as active
+                    triggers.forEach(t => t.classList.remove('active'));
+                    trigger.classList.add('active');
+                });
+            });
+
+            // 3. Cinematic Form Submission Transmission Simulator
+            const form = document.getElementById('cinematicConsult');
+            const statusBox = document.getElementById('cinematicStatus');
+
+            if (form) {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    
+                    statusBox.style.display = 'block';
+                    statusBox.className = 'cinematic-status-alert cinematic-status-success';
+                    statusBox.innerHTML = 'Thank you. Your invitiation request has been logged. Our Executive Council will verify details shortly.';
+                    
+                    form.reset();
+                    
+                    // Smoothly scroll to status box
+                    statusBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                });
+            }
+
+            // 4. Scroll Tracking for Nav and Reset projection to default (overview)
+            const rightPanel = document.querySelector('.split-right');
+            const sections = document.querySelectorAll('.cinematic-section');
+            const navItems = document.querySelectorAll('.nav-item');
+
+            rightPanel.addEventListener('scroll', () => {
+                let currentSectionId = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop - 150;
+                    if (rightPanel.scrollTop >= sectionTop) {
+                        currentSectionId = section.getAttribute('id');
+                    }
+                });
+
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                    const href = item.getAttribute('href');
+                    if (href === `#${currentSectionId}`) {
+                        item.classList.add('active');
+                    }
+                });
+
+                // Reset projection to first slide if back in overview or metrics/contact
+                const currentActiveSec = document.getElementById(currentSectionId);
+                if (currentActiveSec) {
+                    const slideOverride = currentActiveSec.getAttribute('data-slide');
+                    if (slideOverride) {
+                        swapProjection(slideOverride);
+                        triggers.forEach(t => t.classList.remove('active'));
+                    }
+                }
+            });
+
+        });
+    </script>
 </body>
 </html>
